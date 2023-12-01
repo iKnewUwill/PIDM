@@ -70,7 +70,7 @@ class Predictor():
 
         numpy_imgs = output.unsqueeze(0).permute(0,2,3,1).detach().cpu().numpy()
         fake_imgs = (255*numpy_imgs).astype(np.uint8)
-        Image.fromarray(fake_imgs[0]).save('output.png')
+        Image.fromarray(fake_imgs[0]).save('./output/output.png')
 
 
     def predict_appearance(

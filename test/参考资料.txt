@@ -1,0 +1,7 @@
+ PEFT官方文档 https://huggingface.co/docs/peft/index
+ 注：PEFT集成了多种微调方法
+ 
+ python data/prepare_data_LoRA.py \
+--root ./dataset/<dataset_name> \
+--out ./dataset/<dataset_name>
+--sizes ((256,256),)

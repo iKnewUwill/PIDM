@@ -43,8 +43,8 @@ class Resizer:
 
 
 def prepare_data(root, dataset, out, n_worker, sizes, chunksize):
-    assert dataset in ['deepfashion']
-    if dataset == 'deepfashion':
+    assert dataset in ['deepfashion2']
+    if dataset == 'deepfashion2':
         file_txt = '{}/train_pairs.txt'.format(root)
         filenames = []
         with open(file_txt, 'r') as f:
@@ -79,7 +79,7 @@ def prepare_data(root, dataset, out, n_worker, sizes, chunksize):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--root', type=str, help='a path to output directory')
-    parser.add_argument('--dataset', type=str, default='deepfashion', help='a path to output directory')
+    parser.add_argument('--dataset', type=str, default='deepfashion2', help='a path to output directory')
     parser.add_argument('--out', type=str, help='a path to output directory')
     parser.add_argument('--sizes', type=int, nargs='+', default=((256, 256),) )
     parser.add_argument('--n_worker', type=int, help='number of worker processes', default=8)

@@ -1,0 +1,8 @@
+python -m torch.distributed.launch   train.py     --dataset_path "./dataset/deepfashion"   --batch_size 8     --exp_name "pidm_deepfashion"
+
+
+python train_yehui.py     --dataset_path "./dataset/deepfashion"   --batch_size 8     --exp_name "pidm_deepfashion"
+
+
+
+python data/prepare_data.py --root ./dataset/deepfashion --out ./dataset/deepfashion

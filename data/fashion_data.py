@@ -146,7 +146,8 @@ class Dataset(Dataset):
 
     def path_to_fashion_name(self, path_in):
         path_in = path_in.split('img/')[-1]
-        path_in = os.path.join('fashion', path_in)
+        #path_in = os.path.join('fashion', path_in)
+        path_in='fashion/'+path_in
         path_names = path_in.split('/') 
         path_names[3] = path_names[3].replace('_', '')
         path_names[4] = path_names[4].split('_')[0] + "_" + "".join(path_names[4].split('_')[1:])
