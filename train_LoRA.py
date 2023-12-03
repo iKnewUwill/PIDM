@@ -97,12 +97,12 @@ def accumulate(model1, model2, decay=0.9999):
     par2 = dict(model2.named_parameters())
 
     for k in par1.keys():
-        par1[k].data.mul_(decay).add_(par2[k].data, alpha=1 - decay)
+        par1[k].data.mul_(decay).add_(par2['base_model.model.'+k].data, alpha=1 - decay)
 
 
 
 
-def train(conf, loader, val_loader, model, ema, diffusion, betas, optimizer, scheduler, guidance_prob, cond_scale, device, wandb):
+def train(conf, loader, val_loader, model, ema, diffusion, betas, optimizer, scheduler, guidance_prob, cond_scale, device, wandb,args):
 
     import time
 
@@ -112,7 +112,7 @@ def train(conf, loader, val_loader, model, ema, diffusion, betas, optimizer, sch
     loss_mean_list = []
     loss_vb_list = []
  
-    for epoch in range(300):
+    for epoch in range(5):
 
         if is_main_process: print ('#Epoch - '+str(epoch))
 
@@ -144,6 +144,7 @@ def train(conf, loader, val_loader, model, ema, diffusion, betas, optimizer, sch
         
 
             optimizer.zero_grad()
+            loss.requires_grad=True
             loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), 1)
             scheduler.step()
@@ -155,7 +156,7 @@ def train(conf, loader, val_loader, model, ema, diffusion, betas, optimizer, sch
             loss_vb_list.append(loss_vb.detach().item())
 
             accumulate(
-                ema, model.module, 0 if i < conf.training.scheduler.warmup else 0.9999
+                ema, model.module if conf.distributed else model, 0 if i < conf.training.scheduler.warmup else 0.9999
             )
 
 
@@ -236,8 +237,9 @@ def train(conf, loader, val_loader, model, ema, diffusion, betas, optimizer, sch
 
             grid = torch.cat([val_img, val_pose[:,:3], samples], -1)
             
-            gathered_samples = [torch.zeros_like(grid) for _ in range(dist.get_world_size())]
-            dist.all_gather(gathered_samples, grid) 
+            # gathered_samples = [torch.zeros_like(grid) for _ in range(dist.get_world_size())]
+            # dist.all_gather(gathered_samples, grid) 
+            gathered_samples = [grid.clone()]
             
 
             if is_main_process():
@@ -303,7 +305,7 @@ def main(model,settings, EXP_NAME ):
     diffusion = create_gaussian_diffusion(betas, predict_xstart = False)
 
     train(
-        DiffConf, train_dataset, val_dataset, model, ema, diffusion, betas, optimizer, scheduler, args.guidance_prob, args.cond_scale, args.device, wandb
+        DiffConf, train_dataset, val_dataset, model, ema, diffusion, betas, optimizer, scheduler, args.guidance_prob, args.cond_scale, args.device, wandb,args
     )
 
 if __name__ == "__main__":

@@ -18,15 +18,7 @@ import numpy as np
 import data as deepfashion_data
 from model import UNet
 
-# added by yehui
-os.environ["PL_TORCH_DISTRIBUTED_BACKEND"] = "gloo"
-os.environ["WANDB_API_KEY"] = '093f8148cd98c7bf349917fdccb11942e3b292e2' 
-os.environ["WANDB_MODE"] = "offline"
-os.environ["RANK"] = "0"
-os.environ["local_rank"] = "0"
-os.environ['TORCH_DISTRIBUTED_ELASTIC_LOG_REDIRECT'] = 'FALSE'
 
-# -end-
 
 def init_distributed():
 
@@ -307,6 +299,15 @@ def main(settings, EXP_NAME):
     )
 
 if __name__ == "__main__":
+    # added by yehui
+    os.environ["PL_TORCH_DISTRIBUTED_BACKEND"] = "gloo"
+    os.environ["WANDB_API_KEY"] = '093f8148cd98c7bf349917fdccb11942e3b292e2' 
+    os.environ["WANDB_MODE"] = "offline"
+    os.environ["RANK"] = "0"
+    os.environ["local_rank"] = "0"
+    os.environ['TORCH_DISTRIBUTED_ELASTIC_LOG_REDIRECT'] = 'FALSE'
+
+# -end-
 
     #init_distributed()
 
